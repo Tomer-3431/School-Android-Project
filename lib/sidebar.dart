@@ -3,6 +3,8 @@ import 'package:school_application/analytics.dart';
 import 'package:school_application/friends.dart';
 import 'package:school_application/game_screen.dart';
 import 'package:school_application/home_screen.dart';
+import 'package:school_application/recent_games.dart';
+import 'package:school_application/settings.dart';
 
 class Sidebar extends Drawer {
   static Drawer get(BuildContext context) => Drawer(
@@ -109,36 +111,57 @@ class Sidebar extends Drawer {
             ),
           ),
 
-          Row(
-            spacing: 5,
-            children: [
-              Icon(Icons.history),
-              Text("Latest Games"),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [Icon(Icons.arrow_forward_ios)],
+          GestureDetector(
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (final BuildContext context) => RecentGames(),
                 ),
-              ),
-            ],
+              );
+            },
+            child: Row(
+              spacing: 5,
+              children: [
+                Icon(Icons.history),
+                Text("Latest Games"),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [Icon(Icons.arrow_forward_ios)],
+                  ),
+                ),
+              ],
+            ),
           ),
 
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Row(
-                  spacing: 5,
-                  children: [
-                    Icon(Icons.settings),
-                    Text("Settings"),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [Icon(Icons.arrow_forward_ios)],
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (final BuildContext context) => Settings(),
                       ),
-                    ),
-                  ],
+                    );
+                  },
+                  
+                  child: Row(
+                    spacing: 5,
+                    children: [
+                      Icon(Icons.settings),
+                      Text("Settings"),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [Icon(Icons.arrow_forward_ios)],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
