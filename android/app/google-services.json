@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1027577779488",
+    "firebase_url": "https://remmikub-school-project-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "remmikub-school-project",
+    "storage_bucket": "remmikub-school-project.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1027577779488:android:b1b3e6b624b16b3e72f345",
+        "android_client_info": {
+          "package_name": "com.example.school_application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBWoCKa3u9fF43p1woUqaHfa5tIrqSUsA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
