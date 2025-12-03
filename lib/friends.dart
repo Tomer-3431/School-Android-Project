@@ -2,16 +2,25 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:school_application/sidebar.dart';
+import 'package:school_application/user.dart';
 
-class Friends extends StatelessWidget {
-  Random random = Random();
+class Friends extends StatefulWidget {
 
-  Friends({super.key}) {
-    random = Random();
+  Friends({super.key, User? user}) {
+    this.user = user ?? User.getFromCurrent();
   }
 
+  late User user;
+  Random random = Random();
+
+  @override
+  State<StatefulWidget> createState() => FriendsState();
+}
+
+class FriendsState extends State<Friends> {
+
   Widget getStatus() {
-    int randInt = random.nextInt(4);
+    int randInt = widget.random.nextInt(4);
     switch (randInt) {
       case 0:
         return Tooltip(
@@ -44,7 +53,7 @@ class Friends extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(),
-    drawer: Sidebar.get(context),
+    drawer: Sidebar(user: widget.user,),
     body: Column(
       children: [
         Container(

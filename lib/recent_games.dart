@@ -2,16 +2,25 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:school_application/sidebar.dart';
+import 'package:school_application/user.dart';
 
-class RecentGames extends StatelessWidget {
-  Random random = Random();
-
-  RecentGames({super.key}) {
-    random = Random();
+class RecentGames extends StatefulWidget {
+  
+  RecentGames({super.key, User? user}) {
+    this.user = user ?? User.getFromCurrent();
   }
 
+  late User user;
+  Random random = Random();
+
+  @override
+  State<StatefulWidget> createState() => RecentGamesState();
+}
+
+class RecentGamesState extends State<RecentGames> {
+
   Widget getStatus() {
-    int randInt = random.nextInt(3);
+    int randInt = widget.random.nextInt(3);
 
     switch (randInt) {
       case 0:
@@ -40,7 +49,7 @@ class RecentGames extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(),
-    drawer: Sidebar.get(context),
+    drawer: Sidebar(user: widget.user,),
     body: Column(
       children: [
         Container(

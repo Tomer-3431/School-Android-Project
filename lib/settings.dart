@@ -1,11 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:school_application/sidebar.dart';
+import 'package:school_application/user.dart';
 
-class Settings extends StatelessWidget {
+class Settings extends StatefulWidget {
+
+  Settings({super.key, User? user}) {
+    this.user = user ?? User.getFromCurrent();
+  }
+
+  late User user;
+
+  @override
+  State<StatefulWidget> createState() => SettingsState();
+}
+class SettingsState extends State<Settings> {
+
+  bool value = false;
+
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(),
-    drawer: Sidebar.get(context),
+    drawer: Sidebar(user: widget.user,),
     body: Column(
       children: [
         Container(
@@ -28,7 +43,6 @@ class Settings extends StatelessWidget {
             SizedBox(width: 50),
             ElevatedButton(
               onPressed: () {
-                bool value = true;
                 showDialog(
                   context: context,
                   builder: (context) => Dialog(
@@ -42,7 +56,7 @@ class Settings extends StatelessWidget {
                           Switch(
                             value: value,
                             onChanged: (value) {
-                              value = false;
+                              this.value = value;
                             },
                           ),
                         ],

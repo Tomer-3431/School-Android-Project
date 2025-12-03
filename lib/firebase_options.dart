@@ -62,6 +62,8 @@ class DefaultFirebaseOptions {
     projectId: 'remmikub-school-project',
     databaseURL: 'https://remmikub-school-project-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'remmikub-school-project.firebasestorage.app',
+    androidClientId: '1027577779488-sh82aqr951kbvdl1vqlpn92lg0eocp7m.apps.googleusercontent.com',
+    iosClientId: '1027577779488-9epehflb6celoqiipjvcugoehqi0e9ne.apps.googleusercontent.com',
     iosBundleId: 'com.example.schoolApplication',
   );
 
@@ -74,4 +76,5 @@ class DefaultFirebaseOptions {
     databaseURL: 'https://remmikub-school-project-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'remmikub-school-project.firebasestorage.app',
   );
+
 }

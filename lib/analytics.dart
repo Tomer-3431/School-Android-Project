@@ -1,8 +1,20 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:school_application/sidebar.dart';
+import 'package:school_application/user.dart';
 
-class Analytics extends StatelessWidget {
+class Analytics extends StatefulWidget {
+
+  Analytics({super.key, User? user}) {
+    this.user = user ?? User.getFromCurrent();
+  }
+
+  late User user;
+
+  @override
+  State<StatefulWidget> createState() => AnalyticsState();
+}
+class AnalyticsState extends State<Analytics> {
   int showingTooltip = -1;
 
   BarChartGroupData generateGroupData(int x, double y) {
@@ -16,7 +28,7 @@ class Analytics extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(),
-    drawer: Sidebar.get(context),
+    drawer: Sidebar(user: widget.user,),
     body: SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Container(

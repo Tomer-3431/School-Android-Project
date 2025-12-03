@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:school_application/sidebar.dart';
+import 'package:school_application/user.dart';
 
-class GameScreen extends StatelessWidget {
+class GameScreen extends StatefulWidget {
+
+  GameScreen({super.key, User? user}) {
+    this.user = user ?? User.getFromCurrent();
+  }
+
+  late User user;
+
+  @override
+  State<StatefulWidget> createState() => GameScreenState();
+}
+
+class GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(),
-    drawer: Sidebar.get(context),
+    drawer: Sidebar(user: widget.user),
     body: SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Container(
@@ -17,7 +30,7 @@ class GameScreen extends StatelessWidget {
             SizedBox(height: 15),
             Center(
               child: Text(
-                "Tomer's Room",
+                "${widget.user.name}'s Room",
                 style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
               ),
             ),
