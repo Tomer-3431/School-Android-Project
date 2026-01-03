@@ -1,6 +1,8 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:school_application/game/game_spot.dart';
 import 'package:school_application/sidebar.dart';
-import 'package:school_application/tile.dart';
+import 'package:school_application/game/tile.dart';
 import 'package:school_application/user.dart';
 
 class GameScreen extends StatefulWidget {
@@ -25,14 +27,16 @@ class GameScreenState extends State<GameScreen> {
     for (int i = 0; i < 14; i++) {
       tileList.add(
         Tile(
+          i < 4 ?
           i % 4 == 0
               ? TileColor.red
               : i % 4 == 1
               ? TileColor.blue
               : i % 4 == 2
               ? TileColor.yellow
-              : TileColor.black,
-          i < 1
+              : TileColor.black :
+              TileColor.black,
+          i < 4
               ? 1
               : i > 13
               ? 13
@@ -71,15 +75,15 @@ class GameScreenState extends State<GameScreen> {
             //   ),
             // ),
             Container(
-                  height: 5 * 60 * 0.8,
-                  width: 20 * 40 * 0.8,
+              height: 5 * 60 * 0.8,
+              width: 20 * 40 * 0.8,
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.black),
               ),
               child: Stack(
                 children: [
                   Center(child: Text("מפת המשחק")),
-                  ...getDragTarget(context),
+                  ...getGameMap(context),
                 ],
               ),
             ),
@@ -87,8 +91,8 @@ class GameScreenState extends State<GameScreen> {
             Stack(
               children: [
                 SizedBox(
-                  height: MediaQuery.sizeOf(context).height*0.3,
-                  width: MediaQuery.sizeOf(context).width*0.75,
+                  height: MediaQuery.sizeOf(context).height * 0.3,
+                  width: MediaQuery.sizeOf(context).width * 0.75,
                 ),
                 Positioned(
                   top: 0,
@@ -105,8 +109,8 @@ class GameScreenState extends State<GameScreen> {
                       onDragEnd: (details) {
                         if (details.wasAccepted) {
                           // setState(() {
-                            // tileList.remove(tile);
-                            
+                          // tileList.remove(tile);
+
                           // });
                         }
                       },
@@ -157,62 +161,27 @@ class GameScreenState extends State<GameScreen> {
     ),
   );
 
-  List<Widget> getDragTarget(BuildContext context) {
+  List<Widget> getGameMap(BuildContext context) {
     List<Widget> list = [];
 
     double scale = 0.8;
 
-    for (
-      int column = 0;
-      column < 20;
-      column++
-    ) {
-      for (
-        int row = 0;
-        row < 5;
-        row++
-      ) {
-        Tile? tile;
-        bool isHover = false;
+    for (int row = 0; row < 5; row++) {
+      List<GlobalKey<GameSpotState>> tileList = [];
+
+      for (int column = 0; column < 20; column++) {
+        GlobalKey<GameSpotState> key = GlobalKey(debugLabel: 'row:$row|column:$column');
+        GameSpot gameSpot = GameSpot(key: key,scale: scale, getKeys: () => tileList,);
+        tileList.add(key);
         list.add(
           Positioned(
             top: row * 60 * scale,
             left: column * 40 * scale,
-            child: DragTarget<Tile>(
-              builder: (context, candidateData, rejectedData) => Container(
-                height: 60 * scale,
-                width: 40 * scale,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: isHover ? Colors.grey.shade700 : Colors.grey.shade100,
-                  ),
-                ),
-                child: tile != null ? Draggable<Tile>(
-                  data: tile,
-                  feedback: tile!.generateImage(height: 60 * scale, width: 40 * scale),
-                  child: tile!.generateImage(height: 60 * scale, width: 40 * scale),
-                ) : null
-              ),
-              onMove: (details) {
-                tile ??= details.data;
-                isHover = true;
-              },
-              onLeave: (data) {
-                if (data == tile) tile = null;
-                isHover = false;
-              },
-              onWillAcceptWithDetails: (details) {
-                isHover = false;
-                if (tile == null || tile == details.data) {
-                  tile = details.data;
-                  return true;
-                }
-                return false;
-              },
-            ),
+            child: gameSpot,
           ),
         );
       }
+
     }
 
     return list;

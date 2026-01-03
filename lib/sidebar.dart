@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:flutter/material.dart';
 import 'package:school_application/analytics.dart';
 import 'package:school_application/friends.dart';
-import 'package:school_application/game_screen.dart';
+import 'package:school_application/game/game_screen.dart';
 import 'package:school_application/home_screen.dart';
 import 'package:school_application/login.dart';
 import 'package:school_application/recent_games.dart';

@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:school_application/firebase_options.dart';
-import 'package:school_application/game_screen.dart';
+import 'package:school_application/game/game_screen.dart';
 import 'package:school_application/login.dart';
-import 'package:school_application/tile.dart';
+import 'package:school_application/game/tile.dart';
 import 'package:school_application/user.dart';
 
 void main() async {
