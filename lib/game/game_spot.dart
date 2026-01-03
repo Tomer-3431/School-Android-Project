@@ -6,9 +6,11 @@ class GameSpot extends StatefulWidget {
     GlobalKey<GameSpotState>? key,
     this.scale = 1,
     required this.getKeys,
+    this.tile,
   }) : super(key: key);
 
   final double scale;
+  final Tile? tile;
   List<GlobalKey<GameSpotState>> Function() getKeys;
 
   @override
@@ -18,8 +20,15 @@ class GameSpot extends StatefulWidget {
 class GameSpotState extends State<GameSpot> {
   Tile? tile;
   bool isHover = false;
+  bool isEmpty = true;
   bool isLegul = false;
 
+  @override
+  void initState() {
+    super.initState();
+    tile = widget.tile;
+    if (tile != null) isEmpty = false;
+  }
 
   void setToLegul() {
     setState(() {
@@ -44,9 +53,22 @@ class GameSpotState extends State<GameSpot> {
       child: tile != null
           ? Draggable<Tile>(
               data: tile,
+              onDragCompleted: () {
+                isEmpty = true;
+                setState(() {
+                  tile = null;
+                });
+              },
               feedback: tile!.generateImage(
                 height: 60 * widget.scale,
                 width: 40 * widget.scale,
+              ),
+              childWhenDragging: Opacity(
+                opacity: 0.5,
+                child: tile!.generateImage(
+                  height: 60 * widget.scale,
+                  width: 40 * widget.scale,
+                ),
               ),
               child: tile!.generateImage(
                 height: 60 * widget.scale,
@@ -56,41 +78,38 @@ class GameSpotState extends State<GameSpot> {
           : null,
     ),
     onMove: (details) {
-      tile ??= details.data;
+      if (isEmpty) {
+        tile ??= details.data;
+      }
       isHover = true;
     },
     onLeave: (data) {
-      if (data == tile) tile = null;
+      if (isEmpty && data == tile) tile = null;
       isHover = false;
     },
     onAcceptWithDetails: (details) {
-        List<GlobalKey<GameSpotState>> tileList = widget.getKeys();
-
-        Map<GlobalKey<GameSpotState>, Tile> checkList = {};
-        for (int i = 0; i < tileList.length; i++) {
-          if (tileList.elementAt(i).currentState == null) break;
-          if (tileList.elementAt(i).currentState!.tile == null) break;
-          checkList.addEntries(
-            {
-              tileList.elementAt(i): tileList.elementAt(i).currentState!.tile!,
-            }.entries,
-          );
-        }
-
-        if (Tile.isLegul(checkList.values)) {
-          for (int i = 0; i < checkList.length; i++) {
-            checkList.keys.elementAt(i).currentState!.setToLegul();
-          }
-        }
-    },
-    onWillAcceptWithDetails: (details) {
+      isEmpty = false;
       isHover = false;
-      if (tile == null || tile == details.data) {
-        tile = details.data;
+      tile = details.data;
+      List<GlobalKey<GameSpotState>> tileList = widget.getKeys();
 
-        return true;
+      Map<GlobalKey<GameSpotState>, Tile> checkList = {};
+      for (int i = 0; i < tileList.length; i++) {
+        if (tileList.elementAt(i).currentState == null) break;
+        if (tileList.elementAt(i).currentState!.tile == null) break;
+        checkList.addEntries(
+          {
+            tileList.elementAt(i): tileList.elementAt(i).currentState!.tile!,
+          }.entries,
+        );
       }
-      return false;
+
+      if (Tile.isLegul(checkList.values)) {
+        for (int i = 0; i < checkList.length; i++) {
+          checkList.keys.elementAt(i).currentState!.setToLegul();
+        }
+      }
     },
+    onWillAcceptWithDetails: (details) => (isEmpty && (tile == null || tile == details.data)),
   );
 }

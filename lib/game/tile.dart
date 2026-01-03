@@ -50,7 +50,9 @@ class Tile {
           for (int j = 0; j < colors.length; j++) {
             if (colors.elementAt(j) == tiles.elementAt(i).color) return false;
           }
-          colors.add(tiles.elementAt(i).color);;;;
+          colors.add(tiles.elementAt(i).color);
+        } else {
+          return false;
         }
       }
       return true;

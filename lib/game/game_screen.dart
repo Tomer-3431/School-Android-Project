@@ -83,7 +83,7 @@ class GameScreenState extends State<GameScreen> {
               child: Stack(
                 children: [
                   Center(child: Text("מפת המשחק")),
-                  ...getGameMap(context),
+                  ...getGameMap(),
                 ],
               ),
             ),
@@ -98,38 +98,39 @@ class GameScreenState extends State<GameScreen> {
                   top: 0,
                   child: Image.asset("assets/board.png", scale: 2),
                 ),
-                ...tileList.map<Widget>((tile) {
-                  int index = tileList.indexOf(tile);
-                  return Positioned(
-                    top: index > 10 ? 90 * 0.7 + 3 : 3,
-                    left: index > 10
-                        ? (index - 11) * 60 * 0.65 + 1
-                        : index * 60 * 0.65 + 1,
-                    child: Draggable<Tile>(
-                      onDragEnd: (details) {
-                        if (details.wasAccepted) {
-                          // setState(() {
-                          // tileList.remove(tile);
+                ...getGameBoard(tileList)
+                // ...tileList.map<Widget>((tile) {
+                //   int index = tileList.indexOf(tile);
+                //   return Positioned(
+                //     top: index > 10 ? 90 * 0.7 + 3 : 3,
+                //     left: index > 10
+                //         ? (index - 11) * 60 * 0.65 + 1
+                //         : index * 60 * 0.65 + 1,
+                //     child: Draggable<Tile>(
+                //       onDragEnd: (details) {
+                //         if (details.wasAccepted) {
+                //           // setState(() {
+                //           // tileList.remove(tile);
 
-                          // });
-                        }
-                      },
-                      data: tile,
-                      childWhenDragging: SizedBox(
-                        height: 90 * 0.65,
-                        width: 60 * 0.65,
-                      ),
-                      feedback: tile.generateImage(
-                        height: 90 * 0.65,
-                        width: 60 * 0.65,
-                      ),
-                      child: tile.generateImage(
-                        height: 90 * 0.65,
-                        width: 60 * 0.65,
-                      ),
-                    ),
-                  );
-                }),
+                //           // });
+                //         }
+                //       },
+                //       data: tile,
+                //       childWhenDragging: SizedBox(
+                //         height: 90 * 0.65,
+                //         width: 60 * 0.65,
+                //       ),
+                //       feedback: tile.generateImage(
+                //         height: 90 * 0.65,
+                //         width: 60 * 0.65,
+                //       ),
+                //       child: tile.generateImage(
+                //         height: 90 * 0.65,
+                //         width: 60 * 0.65,
+                //       ),
+                //     ),
+                //   );
+                // }),
               ],
             ),
 
@@ -161,7 +162,35 @@ class GameScreenState extends State<GameScreen> {
     ),
   );
 
-  List<Widget> getGameMap(BuildContext context) {
+  List<Widget> getGameBoard(Iterable<Tile?> tiles) {
+    List<Widget> list = [];
+
+    double scale = 1;
+
+    int i = 0;
+    for (int row = 0; row < 2; row++) {
+      List<GlobalKey<GameSpotState>> tileList = [];
+
+      for (int column = 0; column < 15; column++) {
+        GlobalKey<GameSpotState> key = GlobalKey(debugLabel: 'row:$row|column:$column');
+        GameSpot gameSpot = GameSpot(key: key, scale: scale, getKeys: () => tileList,tile: tiles.elementAtOrNull(i),);
+        tileList.add(key);
+        list.add(
+          Positioned(
+            top: row * 62 * scale + 2,
+            left: column * 40 * scale + 7,
+            child: gameSpot,
+          ),
+        );
+        i++;
+      }
+
+    }
+
+    return list;
+  }
+
+  List<Widget> getGameMap() {
     List<Widget> list = [];
 
     double scale = 0.8;
