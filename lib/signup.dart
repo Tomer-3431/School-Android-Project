@@ -16,6 +16,7 @@ class SignupState extends State<Signup> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  String messege = '';
 
   Future<UserCredential> signInWithGoogle() async {
     // Trigger the authentication flow
@@ -138,19 +139,20 @@ class SignupState extends State<Signup> {
                         "games": [],
                         'rank': 1,
                       });
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => Login()),
+                      );
 
                     } on FirebaseAuthException catch (e) {
-                      if (e.code == 'email-already-in-use') {
-                        print('Account with the same email is already in use');
-                      }
+                      print(e.code);
+                      setState(() {
+                        messege = e.code;
+                      });
                     } catch (e) {
                       print(e);
                     }
 
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => Login()),
-                    );
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -185,6 +187,15 @@ class SignupState extends State<Signup> {
                   ),
                 ],
               ),
+              
+              SizedBox(height: 15,),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(messege, style: TextStyle(color:Colors.black, fontSize: 14),)
+                ],
+              )
             ],
           ),
         ],
