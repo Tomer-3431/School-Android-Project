@@ -2,6 +2,7 @@ import 'package:dot_cast/dot_cast.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:school_application/sidebar.dart';
 import 'package:school_application/user.dart';
 
@@ -22,6 +23,15 @@ class HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.portraitUp
+    ]);
   }
 
   @override

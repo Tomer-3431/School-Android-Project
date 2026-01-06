@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:school_application/home_screen.dart';
 import 'package:school_application/signup.dart';
@@ -17,6 +18,15 @@ class LoginState extends State<Login> {
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.portraitUp
+    ]);
+  }
 
   Future<UserCredential> signInWithGoogle() async {
     GoogleSignIn.instance.initialize(

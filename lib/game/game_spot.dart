@@ -13,7 +13,7 @@ class GameSpot extends StatefulWidget {
     this.column = -1,
     bool Function()? checkTurn,
   }) : super(key: key) {
-    checkTurn = checkTurn ?? () => true;
+    this.checkTurn = checkTurn ?? () => true;
   }
 
   final double scale;

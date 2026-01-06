@@ -13,49 +13,51 @@ class GameScreen extends StatefulWidget {
   }
 
   late User user;
-  late GameManager gameManager;
+  // late GameManager gameManager;
 
   @override
   State<StatefulWidget> createState() => GameScreenState();
 }
 
 class GameScreenState extends State<GameScreen> {
-  // List<Tile> tileList = [];
-  // List<Widget> boardTiles = [];
+  List<Tile> tileList = [];
+  List<Widget> boardTiles = [];
 
   @override
   void initState() {
     super.initState();
 
-    // for (int i = 0; i < 14; i++) {
-    //   tileList.add(
-    //     Tile(
-    //       i < 4
-    //           ? i % 4 == 0
-    //                 ? TileColor.red
-    //                 : i % 4 == 1
-    //                 ? TileColor.blue
-    //                 : i % 4 == 2
-    //                 ? TileColor.yellow
-    //                 : TileColor.black
-    //           : TileColor.black,
-    //       i < 4
-    //           ? 1
-    //           : i > 13
-    //           ? 13
-    //           : i,
-    //     ),
-    //   );
-    // }
+    for (int i = 0; i < 14; i++) {
+      tileList.add(
+        Tile(
+          i < 4
+              ? i % 4 == 0
+                    ? TileColor.red
+                    : i % 4 == 1
+                    ? TileColor.blue
+                    : i % 4 == 2
+                    ? TileColor.yellow
+                    : TileColor.black
+              : TileColor.black,
+          i < 4
+              ? 1
+              : i > 13
+              ? 13
+              : i,
+        ),
+      );
+    }
+    
+    flipScreen();
   }
 
-  @override
-  void dispose() {
-    SystemChrome.setPreferredOrientations([
+  void flipScreen() async {
+    await SystemChrome.setPreferredOrientations([
+      // DeviceOrientation.portraitDown,
+      // DeviceOrientation.portraitUp,
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
-    super.dispose();
   }
 
   @override
@@ -103,7 +105,7 @@ class GameScreenState extends State<GameScreen> {
                       child: Stack(
                         children: [
                           Center(child: Text("מפת המשחק")),
-                          ...getGameMap(tiles: widget.gameManager.gameMap),
+                          ...getGameMap(),
                         ],
                       ),
                     ),
@@ -121,7 +123,7 @@ class GameScreenState extends State<GameScreen> {
                         backgroundColor: Color.fromARGB(255, 254, 243, 229),
                         foregroundColor: Colors.black,
                         child: Text(
-                          "${widget.gameManager.stock.length}",
+                          "${20}",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 24,
@@ -142,7 +144,7 @@ class GameScreenState extends State<GameScreen> {
                       top: 0,
                       child: Image.asset("assets/board.png", scale: 2),
                     ),
-                    ...getGameBoard(tiles: widget.gameManager.getMyBoard()),
+                    ...getGameBoard(tiles: tileList),
                     // ...tileList.map<Widget>((tile) {
                     //   int index = tileList.indexOf(tile);
                     //   return Positioned(
@@ -244,8 +246,8 @@ class GameScreenState extends State<GameScreen> {
                             CircleAvatar(),
                           ],
                         ),
-                        widget.gameManager.players.length > 2
-                            ? Row(
+                        // widget.gameManager.players.length > 2
+                             Row(
                                 spacing: 20,
                                 children: [
                                   Container(
@@ -271,10 +273,10 @@ class GameScreenState extends State<GameScreen> {
                                   ),
                                   CircleAvatar(),
                                 ],
-                              )
-                            : Container(),
-                        widget.gameManager.players.length > 3
-                            ? Row(
+                              ),
+                            // : Container(),
+                        // widget.gameManager.players.length > 3
+                            Row(
                                 spacing: 20,
                                 children: [
                                   Container(
@@ -306,7 +308,7 @@ class GameScreenState extends State<GameScreen> {
                                   CircleAvatar(),
                                 ],
                               )
-                            : Container(),
+                            // : Container(),
                       ],
                     ),
                   ],
@@ -371,10 +373,10 @@ class GameScreenState extends State<GameScreen> {
           scale: scale,
           getKeys: () => tileList,
           tile: tiles?.getTile(row, column),
-          row: row,
-          column: column,
-          onAccept: onAccept,
-          checkTurn: widget.gameManager.checkMyTurn,
+          // row: row,
+          // column: column,
+          // onAccept: onAccept,
+          // checkTurn: widget.gameManager.checkMyTurn,
         );
         tileList.add(key);
         list.add(
@@ -390,7 +392,7 @@ class GameScreenState extends State<GameScreen> {
     return list;
   }
 
-  void onAccept(int row, int column, Tile? tile) {
-    widget.gameManager.gameMap.updateTile(row, column, tile);
-  }
+  // void onAccept(int row, int column, Tile? tile) {
+  //   widget.gameManager.gameMap.updateTile(row, column, tile);
+  // }
 }

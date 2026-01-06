@@ -116,6 +116,9 @@ class Player {
 }
 
 class GameMap {
+
+  GameMap();
+
   late List<List<Tile?>> tiles;
 
   Tile? getTile(int row, int column) {
