@@ -1,5 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:school_application/game/game_manager.dart';
 import 'package:school_application/game/game_spot.dart';
 import 'package:school_application/sidebar.dart';
 import 'package:school_application/game/tile.dart';
@@ -11,39 +13,41 @@ class GameScreen extends StatefulWidget {
   }
 
   late User user;
+  late GameManager gameManager;
 
   @override
   State<StatefulWidget> createState() => GameScreenState();
 }
 
 class GameScreenState extends State<GameScreen> {
-  List<Tile> tileList = [];
-  List<Widget> boardTiles = [];
+  // List<Tile> tileList = [];
+  // List<Widget> boardTiles = [];
 
   @override
   void initState() {
     super.initState();
 
-    for (int i = 0; i < 14; i++) {
-      tileList.add(
-        Tile(
-          i < 4 ?
-          i % 4 == 0
-              ? TileColor.red
-              : i % 4 == 1
-              ? TileColor.blue
-              : i % 4 == 2
-              ? TileColor.yellow
-              : TileColor.black :
-              TileColor.black,
-          i < 4
-              ? 1
-              : i > 13
-              ? 13
-              : i,
-        ),
-      );
-    }
+    // for (int i = 0; i < 14; i++) {
+    //   tileList.add(
+    //     Tile(
+    //       i < 4
+    //           ? i % 4 == 0
+    //                 ? TileColor.red
+    //                 : i % 4 == 1
+    //                 ? TileColor.blue
+    //                 : i % 4 == 2
+    //                 ? TileColor.yellow
+    //                 : TileColor.black
+    //           : TileColor.black,
+    //       i < 4
+    //           ? 1
+    //           : i > 13
+    //           ? 13
+    //           : i,
+    //     ),
+    //   );
+    // }
+  }
   }
 
   @override
@@ -83,7 +87,6 @@ class GameScreenState extends State<GameScreen> {
               child: Stack(
                 children: [
                   Center(child: Text("מפת המשחק")),
-                  ...getGameMap(),
                 ],
               ),
             ),
@@ -93,12 +96,13 @@ class GameScreenState extends State<GameScreen> {
                 SizedBox(
                   height: MediaQuery.sizeOf(context).height * 0.3,
                   width: MediaQuery.sizeOf(context).width * 0.75,
+                          ...getGameMap(tiles: widget.gameManager.gameMap),
                 ),
                 Positioned(
                   top: 0,
                   child: Image.asset("assets/board.png", scale: 2),
+                    ...getGameBoard(tiles: widget.gameManager.getMyBoard()),
                 ),
-                ...getGameBoard(tileList)
                 // ...tileList.map<Widget>((tile) {
                 //   int index = tileList.indexOf(tile);
                 //   return Positioned(
@@ -156,6 +160,10 @@ class GameScreenState extends State<GameScreen> {
             // SizedBox(
             //   height: 20,
             // )
+                        widget.gameManager.players.length > 2
+                            : Container(),
+                        widget.gameManager.players.length > 3
+                            : Container(),
           ],
         ),
       ),
@@ -163,6 +171,7 @@ class GameScreenState extends State<GameScreen> {
   );
 
   List<Widget> getGameBoard(Iterable<Tile?> tiles) {
+  List<Widget> getGameBoard({Iterable<Tile?>? tiles}) {
     List<Widget> list = [];
 
     double scale = 1;
@@ -190,7 +199,7 @@ class GameScreenState extends State<GameScreen> {
     return list;
   }
 
-  List<Widget> getGameMap() {
+  List<Widget> getGameMap({GameMap? tiles}) {
     List<Widget> list = [];
 
     double scale = 0.8;
@@ -201,6 +210,11 @@ class GameScreenState extends State<GameScreen> {
       for (int column = 0; column < 20; column++) {
         GlobalKey<GameSpotState> key = GlobalKey(debugLabel: 'row:$row|column:$column');
         GameSpot gameSpot = GameSpot(key: key,scale: scale, getKeys: () => tileList,);
+          tile: tiles?.getTile(row, column),
+          row: row,
+          column: column,
+          onAccept: onAccept,
+          checkTurn: widget.gameManager.checkMyTurn,
         tileList.add(key);
         list.add(
           Positioned(
@@ -214,5 +228,9 @@ class GameScreenState extends State<GameScreen> {
     }
 
     return list;
+  }
+
+  void onAccept(int row, int column, Tile? tile) {
+    widget.gameManager.gameMap.updateTile(row, column, tile);
   }
 }
