@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Tile {
-  final TileColor color;
-  final int num;
+  TileColor color = TileColor.black;
+  int num = 1; 
 
-  const Tile(this.color, this.num);
+  Tile(this.color, this.num);
 
   Widget generateImage({double width = 120, double height = 180}) => Stack(
     children: [
@@ -59,6 +59,18 @@ class Tile {
     }
 
     return false;
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "num": num,
+      "color": color.index
+    };
+  }
+
+  Tile.fromJson(Map<String, dynamic> json) {
+    num = json["num"];
+    color = TileColor.values[json["color"]];
   }
 }
 

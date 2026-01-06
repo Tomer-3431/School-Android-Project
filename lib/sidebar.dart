@@ -25,9 +25,7 @@ class SidebarState extends State<Sidebar> {
   Widget build(BuildContext context) => Drawer(
     child: Container(
       padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 50,
+      child: ListView(
         children: [
           SizedBox(height: 30),
           Text('Welcome ${widget.user.name}!', style: TextStyle(fontSize: 26)),

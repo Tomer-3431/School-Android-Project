@@ -7,11 +7,23 @@ class GameSpot extends StatefulWidget {
     this.scale = 1,
     required this.getKeys,
     this.tile,
-  }) : super(key: key);
+    this.borderColor = const Color.fromARGB(122, 245, 245, 245),
+    this.onAccept,
+    this.row = -1,
+    this.column = -1,
+    bool Function()? checkTurn,
+  }) : super(key: key) {
+    checkTurn = checkTurn ?? () => true;
+  }
 
   final double scale;
   final Tile? tile;
+  final Color borderColor;
   List<GlobalKey<GameSpotState>> Function() getKeys;
+  void Function(int, int, Tile?)? onAccept;
+  int row;
+  int column;
+  late bool Function() checkTurn;
 
   @override
   State<StatefulWidget> createState() => GameSpotState();
@@ -47,7 +59,7 @@ class GameSpotState extends State<GameSpot> {
               ? Colors.deepOrange
               : isHover
               ? Colors.grey.shade700
-              : Colors.grey.shade100,
+              : widget.borderColor,
         ),
       ),
       child: tile != null
@@ -57,6 +69,10 @@ class GameSpotState extends State<GameSpot> {
                 isEmpty = true;
                 setState(() {
                   tile = null;
+
+                  if (widget.onAccept != null) {
+                    widget.onAccept!(widget.row, widget.column, null);
+                  }
                 });
               },
               feedback: tile!.generateImage(
@@ -109,7 +125,13 @@ class GameSpotState extends State<GameSpot> {
           checkList.keys.elementAt(i).currentState!.setToLegul();
         }
       }
+
+      if (widget.onAccept != null) {
+        widget.onAccept!(widget.row, widget.column, details.data);
+      }
     },
-    onWillAcceptWithDetails: (details) => (isEmpty && (tile == null || tile == details.data)),
+    onWillAcceptWithDetails: (details) =>
+        (widget.checkTurn() &&
+        (isEmpty && (tile == null || tile == details.data))),
   );
 }
